@@ -54,8 +54,7 @@ def verify_dll(path: Path) -> str:
     digest = hashlib.sha256(path.read_bytes()).hexdigest()
     if digest != PROFILE.sha256:
         raise PatchError(
-            f"streamer.dll 版本不匹配：{digest}\n"
-            f"当前仅支持已分析的 UU {PROFILE.version} 构建。"
+            "请更新此工具以适配当前 UU 版本。"
         )
     return digest
 
@@ -178,7 +177,7 @@ def inspect(api: WindowsAPI, pid: int) -> dict:
         supported = digest == PROFILE.sha256
         state = patch_state(api.read(handle, base + PROFILE.rva, len(PROFILE.before))) if supported else "unsupported"
         return {"pid": pid, "executable": str(exe), "dll": str(path),
-                "sha256": digest, "supported": supported, "state": state}
+                "supported": supported, "state": state}
     finally:
         api.k.CloseHandle(handle)
 
